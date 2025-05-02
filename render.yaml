@@ -4,9 +4,17 @@ services:
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: python app.py
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false  # La defines manualmente en el dashboard
 
   - type: worker
     name: recolector-esp32
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: python recolector.py
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false

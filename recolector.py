@@ -14,7 +14,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 CHANNEL_ID = '2936695'
 API_KEY = 'SGHMO66Y8C0QHDN0'
 FETCH_URL = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json?api_key={API_KEY}&results=1'
-
+####
 # Crear tabla si no existe
 def inicializar_bd():
     conn = psycopg2.connect(DATABASE_URL)
