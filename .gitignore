@@ -1,4 +1,31 @@
+# Entornos virtuales
 venv/
 .env
+*.env
+
+# Archivos temporales
+*.pyc
 __pycache__/
+*.log
+*.sqlite3
 *.db
+*.pkl
+*.pid
+*.swp
+*.bak
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de pruebas o datos exportados
+*.xlsx
+datos_filtrados.xlsx
+todos_los_datos.xlsx
+
+# Archivos personales u ocultos
+*.idea/
+.vscode/
+
+# Carpeta de cache de pip
+__pypackages__/
