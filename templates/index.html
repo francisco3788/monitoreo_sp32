@@ -70,6 +70,17 @@
             max-width: 1000px;
             margin: auto;
         }
+
+        .mensaje {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffe6e6;
+            border: 1px solid #ff0000;
+            border-radius: 8px;
+            text-align: center;
+            color: #cc0000;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -89,32 +100,36 @@
             <button type="submit">Exportar TODOS los datos</button>
         </form>
 
-        {% if datos %}
-        <h3>Resultados:</h3>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Fecha</th>
-                <th>Field 1</th>
-                <th>Field 2</th>
-                <th>Field 3</th>
-                <th>Field 4</th>
-                <th>Field 5</th>
-                <th>Field 6</th>
-            </tr>
-            {% for fila in datos %}
-            <tr>
-                <td>{{ fila.id }}</td>
-                <td>{{ fila.timestamp }}</td>
-                <td>{{ fila.field1 }}</td>
-                <td>{{ fila.field2 }}</td>
-                <td>{{ fila.field3 }}</td>
-                <td>{{ fila.field4 }}</td>
-                <td>{{ fila.field5 }}</td>
-                <td>{{ fila.field6 }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        {% if datos is not none %}
+            {% if datos|length == 0 %}
+                <div class="mensaje">⚠️ No se encontraron datos para el rango seleccionado.</div>
+            {% else %}
+                <h3>Resultados:</h3>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Field 1</th>
+                        <th>Field 2</th>
+                        <th>Field 3</th>
+                        <th>Field 4</th>
+                        <th>Field 5</th>
+                        <th>Field 6</th>
+                    </tr>
+                    {% for fila in datos %}
+                    <tr>
+                        <td>{{ fila.id }}</td>
+                        <td>{{ fila.timestamp }}</td>
+                        <td>{{ fila.field1 }}</td>
+                        <td>{{ fila.field2 }}</td>
+                        <td>{{ fila.field3 }}</td>
+                        <td>{{ fila.field4 }}</td>
+                        <td>{{ fila.field5 }}</td>
+                        <td>{{ fila.field6 }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
         {% endif %}
     </div>
 </body>

@@ -4,14 +4,27 @@ import pandas as pd
 from flask import Flask, render_template, request, send_file
 from dotenv import load_dotenv
 from io import BytesIO
+from datetime import datetime
 
 app = Flask(__name__)
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+# =========================
+# 🔎 Consulta con filtrado
+# =========================
 def consultar_datos(fecha_inicio=None, fecha_fin=None):
     conn = psycopg2.connect(DATABASE_URL)
     cur = conn.cursor()
+    if fecha_inicio and fecha_fin:
+        # Normalizar formato (datetime-local) → ISO sin segundos
+        try:
+            fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%dT%H:%M').isoformat()
+            fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%dT%H:%M').isoformat()
+        except Exception as e:
+            print("❌ Error al convertir fechas:", e)
+            fecha_inicio = fecha_fin = None
+
     if fecha_inicio and fecha_fin:
         cur.execute("""
             SELECT * FROM datos
@@ -26,6 +39,9 @@ def consultar_datos(fecha_inicio=None, fecha_fin=None):
     conn.close()
     return df
 
+# =========================
+# 🌐 Página principal
+# =========================
 @app.route('/', methods=['GET', 'POST'])
 def index():
     datos = None
@@ -35,6 +51,9 @@ def index():
         datos = consultar_datos(inicio, fin).to_dict(orient='records')
     return render_template('index.html', datos=datos)
 
+# =========================
+# 📥 Exportar por rango
+# =========================
 @app.route('/exportar', methods=['POST'])
 def exportar():
     inicio = request.form['inicio']
@@ -45,6 +64,9 @@ def exportar():
     output.seek(0)
     return send_file(output, download_name="datos_filtrados.xlsx", as_attachment=True)
 
+# =========================
+# 📥 Exportar todo
+# =========================
 @app.route('/exportar_todo')
 def exportar_todo():
     df = consultar_datos()

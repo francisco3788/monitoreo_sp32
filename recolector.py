@@ -3,6 +3,8 @@ import time
 import requests
 import psycopg2
 from dotenv import load_dotenv
+from datetime import datetime
+import pytz
 
 # Cargar variables de entorno
 load_dotenv()
@@ -32,7 +34,7 @@ def inicializar_bd():
     conn.commit()
     conn.close()
 
-# Obtener datos desde ThingSpeak
+# Obtener datos desde ThingSpeak y convertir hora a Colombia
 def obtener_dato():
     try:
         res = requests.get(FETCH_URL)
@@ -45,8 +47,18 @@ def obtener_dato():
 
         if 'feeds' in data and data['feeds']:
             feed = data['feeds'][0]
+
+            # Convertir hora UTC a hora de Colombia
+            utc_time = feed.get('created_at')
+            if utc_time:
+                utc_dt = datetime.strptime(utc_time, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=pytz.utc)
+                colombia_time = utc_dt.astimezone(pytz.timezone('America/Bogota'))
+                timestamp_colombia = colombia_time.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                timestamp_colombia = None
+
             return (
-                feed.get('created_at'),
+                timestamp_colombia,
                 feed.get('field1'),
                 feed.get('field2'),
                 feed.get('field3'),
