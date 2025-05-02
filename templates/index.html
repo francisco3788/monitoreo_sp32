@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta de Datos ESP32</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f6f8;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+
+        input[type="datetime-local"], button {
+            padding: 10px;
+            margin: 10px 5px 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Consulta de Datos del ESP32</h2>
+
+        <form method="POST">
+            <label>Desde:</label>
+            <input type="datetime-local" name="inicio" required>
+            <label>Hasta:</label>
+            <input type="datetime-local" name="fin" required>
+            <button type="submit">Filtrar</button>
+            <button formaction="/exportar" formmethod="post">Exportar Excel</button>
+        </form>
+
+        <form action="/exportar_todo">
+            <button type="submit">Exportar TODOS los datos</button>
+        </form>
+
+        {% if datos %}
+        <h3>Resultados:</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Field 1</th>
+                <th>Field 2</th>
+                <th>Field 3</th>
+                <th>Field 4</th>
+                <th>Field 5</th>
+                <th>Field 6</th>
+            </tr>
+            {% for fila in datos %}
+            <tr>
+                <td>{{ fila.id }}</td>
+                <td>{{ fila.timestamp }}</td>
+                <td>{{ fila.field1 }}</td>
+                <td>{{ fila.field2 }}</td>
+                <td>{{ fila.field3 }}</td>
+                <td>{{ fila.field4 }}</td>
+                <td>{{ fila.field5 }}</td>
+                <td>{{ fila.field6 }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+</body>
+</html>
